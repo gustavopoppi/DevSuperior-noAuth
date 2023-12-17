@@ -71,6 +71,7 @@ public class AuthorizationServerConfig {
 	@Order(2)
 	public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
 
+		//Configuração authorization service para funcionar junto com o spring security;
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
 		// @formatter:off
@@ -147,6 +148,7 @@ public class AuthorizationServerConfig {
 		return new DelegatingOAuth2TokenGenerator(jwtGenerator, accessTokenGenerator);
 	}
 
+	//Customização do nosso token (revindicações)
 	@Bean
 	public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
 		return context -> {
@@ -168,6 +170,7 @@ public class AuthorizationServerConfig {
 		return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
 	}
 
+	//Método de assinatura
 	@Bean
 	public JWKSource<SecurityContext> jwkSource() {
 		RSAKey rsaKey = generateRsa();
@@ -175,6 +178,7 @@ public class AuthorizationServerConfig {
 		return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
 	}
 
+	//Método de assinatura
 	private static RSAKey generateRsa() {
 		KeyPair keyPair = generateRsaKey();
 		RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
@@ -182,6 +186,7 @@ public class AuthorizationServerConfig {
 		return new RSAKey.Builder(publicKey).privateKey(privateKey).keyID(UUID.randomUUID().toString()).build();
 	}
 
+	//Método de assinatura
 	private static KeyPair generateRsaKey() {
 		KeyPair keyPair;
 		try {
